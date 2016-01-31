@@ -5,7 +5,7 @@ myApp.config([
     $locationProvider.html5mode(true);
     $routeProvider
       .when('/tags', { templateUrl: " <%= asset_path('tags/index.html') %> ", controller: "TagListCtrl"} )
-      .when('/tags/:id/edit', { templateUrl: " <%= asset_path('tags/edit.html.erb') %> ", controller: "TagEditCtrl"} )
+      // .when('/tags/:id/edit', { templateUrl: " <%= asset_path('tags/edit.html') %> ", controller: "TagEditCtrl"} )
       .otherwise({ redirectTo: '/tags' });
 }]);
 
