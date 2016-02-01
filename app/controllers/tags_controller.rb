@@ -31,7 +31,7 @@ class TagsController < ApplicationController
 
   def destroy
     @tag.destroy
-    render json: @tag, status: 201
+    respond_with @tag
   end
 
   private

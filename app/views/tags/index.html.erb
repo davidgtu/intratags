@@ -1,18 +1,18 @@
-<div ng-controller="TagListCtrl" ng-style="{color: myColor}">
+<div ng-controller="TagListCtrl">
   <table>
     Name: <input ng-model="newTag.name"> <br>
     Color: <input ng-model="newTag.color"> <br>
     Order: <input ng-model="newTag.order"> <br>
     <button ng-click="saveNewTag()">Save</button>
   </div>
-  <tr ng-show="tags.length" ng-repeat="tag in tags">
-    <td>{{tag.name}}</td>
-    <td>{{tag.color}}</td>
-    <td>{{tag.order}}</td>
-    <td>
-        <!-- <a href="/tags/{{tag.id}}/edit.html">Edit</a> --> | <a href="" ng-click="deleteTag(tag.id)">Remove</a>
-    </td>
-  </tr>
+  <ul ui-sortable ng-model="newTag">
+    <li ng-repeat="tag in tags">
+      {{tag.name}}
+      {{tag.color}}
+      {{tag.order}}
+      <a href="" ng-click="deleteTag(tag)">Remove</a>
+    </li>
+  </ul>
 </table>
 
 

@@ -1,7 +1,7 @@
-var myApp = angular.module('tagsapp', ['ngRoute', 'ngResource']);
+var myApp = angular.module('tagsapp', ['ngRoute', 'ngResource', 'ui.sortable']);
 
 myApp.factory("Tag", function($resource) {
-  return $resource("/api/tags/:id", { _id: "@id"},
+  return $resource("/api/tags/:id", { id: "@id.$oid"},
     {
       'create':  { method: 'POST' },
       'index':   { method: 'GET', isArray: true },
@@ -15,7 +15,7 @@ myApp.factory("Tag", function($resource) {
 // Controllers
 myApp.controller("TagListCtrl", ['$scope', '$resource', 'Tag', '$location',
                       function($scope, $resource, Tag, $location) {
-  $scope.tags = Tag.query();
+  $scope.tags = Tag.index();
 
   $scope.saveNewTag = function() {
     Tag.create({ tag: $scope.newTag }, function(response){
@@ -25,32 +25,36 @@ myApp.controller("TagListCtrl", ['$scope', '$resource', 'Tag', '$location',
   }
 
   $scope.deleteTag = function(tagId) {
-    Tag.remove({ _id: tagId }, function(response){
+    tagId.$delete(function(response) {
       var index = $scope.tags.indexOf(tagId);
       $scope.tags.splice(index, 1)
-      $location.path('/')
-    })
-  };
+    });
+  }
 }]);
 
-// myApp.controller("TagEditCtrl", ['$scope', '$resource', 'Tag', '$location', '$routeParams', function($scope, $resource, Tag, $location, $routeParams){
-//   $scope.tag = Tag.get({ id: $routeParams.id });
-//   $scope.update = function(){
-//     if($scope.tagForm.$valid){
-//       Tag.update({ id: $scope.tag.id }, { tag: $scope.tag }, function(){
-//         $location.path('/');
-//       }, function(error){
-//         console.log(error)
-//       });
-//     }
-//   }
-// }]);
 
-// Routes
+myApp.controller("TagEditCtrl", ['$scope', '$resource', 'Tag', '$location', '$routeParams', function($scope, $resource, Tag, $location, $routeParams){
+  $scope.tag = Tag.get({ id: $routeParams.id });
+  $scope.update = function(){
+    if($scope.tagForm.$valid){
+      Tag.update({ id: $scope.tag.id }, { tag: $scope.tag }, function(){
+        // $location.path('/');
+      }, function(error){
+        console.log(error)
+      });
+    }
+  }
+}]);
+
+//Routes
 // myApp.config([
 //   '$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
+//     $routeProvider.when('/tags', {
+//       templateUrl: 'index.html',
+//       controller: 'TagListCtrl'
+//     });
 //     $routeProvider.when('/tags/:id/edit', {
-//       templateUrl: '/views/tags/edit.html.erb',
+//       templateUrl: '/templates/tags/edit.html',
 //       controller: 'TagEditCtrl'
 //     });
 //     $routeProvider.otherwise({
